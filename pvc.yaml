@@ -1,0 +1,14 @@
+---
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: z2m-data
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: topolvm-provisioner 
+  volumeMode: Filesystem 
+  resources:
+    requests:
+      storage: 1Gi 

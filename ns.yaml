@@ -1,0 +1,8 @@
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: z2m
+  labels:
+    name: z2m

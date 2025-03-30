@@ -1,0 +1,20 @@
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: zigbee2mqtt
+  namespace: z2m
+  labels:
+    app.kubernetes.io/instance: "zigbee2mqtt"
+    app.kubernetes.io/name: "zigbee2mqtt"
+spec:
+  type: LoadBalancer
+  selector:
+    app: z2m
+  ports:
+    - name: http
+      port: 8080
+      targetPort: web
+      protocol: TCP
+

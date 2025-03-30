@@ -1,0 +1,37 @@
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zigbee2mqtt
+  namespace: z2m
+  labels:
+    app.kubernetes.io/instance: "zigbee2mqtt"
+    app.kubernetes.io/name: "zigbee2mqtt"
+    app.kubernetes.io/version: "2.1.0"
+data:
+  configuration.yaml: |
+    homeassistant:
+      enabled: true
+    mqtt:
+      base_topic: zigbee2mqtt
+      server: {{ mqtt-server }}
+    serial:
+      port: /dev/ttyACM0
+      adapter: ember
+    frontend:
+      enabled: true
+      port: 8080
+      host: 0.0.0.0
+      auth_token: {{ z2m-auth-token }}
+    devices: devices.yaml
+    groups: groups.yaml
+    advanced:
+      log_level: info
+      log_directory: /var/log/zigbee2mqtt
+      log_output:
+        - console
+      report: true
+      timestamp_format: YYYY-MM-DD HH:mm:ss
+    device_options: {}
+    version: 4

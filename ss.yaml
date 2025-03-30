@@ -1,0 +1,66 @@
+---
+
+kind: StatefulSet
+apiVersion: apps/v1
+metadata:
+  name: zigbee2mqtt
+  namespace: z2m
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: z2m
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: "zigbee2mqtt"
+        app.kubernetes.io/name: "zigbee2mqtt"
+        app.kubernetes.io/version: "2.1.0"
+        app: z2m
+    spec:
+      containers:
+        - name: zigbee2mqtt
+          image: "koenkk/zigbee2mqtt:2.1.0"
+          securityContext: {}
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: TZ
+              value: Europe/Helsinki
+          ports:
+            - containerPort: 8080
+              name: web
+              protocol: TCP
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /
+              port: web
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 10
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              cpu: 200m
+              memory: 600Mi
+              squat.ai/serial: 1
+            requests:
+              cpu: 200m
+              memory: 600Mi
+          volumeMounts:
+            - mountPath: /app/data/
+              name: data
+            - mountPath: /app/data/configuration.yaml
+              name: config-volume
+              subPath: configuration.yaml
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: z2m-data
+        - name: config-volume
+          configMap:
+            name: zigbee2mqtt
